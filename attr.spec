@@ -4,7 +4,7 @@
 #
 Name     : attr
 Version  : 2.4.47
-Release  : 29
+Release  : 30
 URL      : http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
 Source0  : http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
 Summary  : No detailed summary available
@@ -14,6 +14,11 @@ Requires: attr-bin
 Requires: attr-lib
 Requires: attr-doc
 Requires: attr-locales
+BuildRequires : gcc-dev32
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libstdc++32
+BuildRequires : glibc-dev32
+BuildRequires : glibc-libc32
 Patch1: testsuite-xfs.patch
 
 %description
@@ -39,6 +44,16 @@ Provides: attr-devel
 dev components for the attr package.
 
 
+%package dev32
+Summary: dev32 components for the attr package.
+Group: Default
+Requires: attr-lib32
+Requires: attr-bin
+
+%description dev32
+dev32 components for the attr package.
+
+
 %package doc
 Summary: doc components for the attr package.
 Group: Documentation
@@ -55,6 +70,14 @@ Group: Libraries
 lib components for the attr package.
 
 
+%package lib32
+Summary: lib32 components for the attr package.
+Group: Default
+
+%description lib32
+lib32 components for the attr package.
+
+
 %package locales
 Summary: locales components for the attr package.
 Group: Default
@@ -66,6 +89,9 @@ locales components for the attr package.
 %prep
 %setup -q -n attr-2.4.47
 %patch1 -p1
+pushd ..
+cp -a attr-2.4.47 build32
+popd
 
 %build
 export LANG=C
@@ -80,8 +106,28 @@ INSTALL_GROUP=root \
 --disable-static
 make V=1  %{?_smp_mflags}
 
+pushd ../build32/
+export CFLAGS="$CFLAGS -m32"
+export CXXFLAGS="$CXXFLAGS -m32"
+export LDFLAGS="$LDFLAGS -m32"
+%configure --disable-static INSTALL_USER=root \
+INSTALL_GROUP=root \
+--enable-nls \
+--enable-shared \
+--disable-static --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+make V=1  %{?_smp_mflags}
+popd
 %install
 rm -rf %{buildroot}
+pushd ../build32/
+%make_install32 install install-lib install-dev DESTDIR=%{buildroot}
+if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
+then
+pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do mv $i 32$i ; done
+popd
+fi
+popd
 %make_install install install-lib install-dev DESTDIR=%{buildroot}
 %find_lang attr
 ## make_install_append content
@@ -106,6 +152,10 @@ make %{?_smp_mflags} tests || true
 /usr/include/attr/xattr.h
 /usr/lib64/libattr.so
 
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libattr.so
+
 %files doc
 %defattr(-,root,root,-)
 %doc /usr/share/doc/attr/*
@@ -118,6 +168,11 @@ make %{?_smp_mflags} tests || true
 %defattr(-,root,root,-)
 /usr/lib64/libattr.so.1
 /usr/lib64/libattr.so.1.1.0
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libattr.so.1
+/usr/lib32/libattr.so.1.1.0
 
 %files locales -f attr.lang 
 %defattr(-,root,root,-)
