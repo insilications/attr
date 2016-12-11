@@ -4,7 +4,7 @@
 #
 Name     : attr
 Version  : 2.4.47
-Release  : 28
+Release  : 29
 URL      : http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
 Source0  : http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
 Summary  : No detailed summary available
@@ -33,6 +33,7 @@ Summary: dev components for the attr package.
 Group: Development
 Requires: attr-lib
 Requires: attr-bin
+Provides: attr-devel
 
 %description dev
 dev components for the attr package.
@@ -67,12 +68,17 @@ locales components for the attr package.
 %patch1 -p1
 
 %build
+export LANG=C
+export CFLAGS="$CFLAGS -Os -ffunction-sections "
+export FCFLAGS="$CFLAGS -Os -ffunction-sections "
+export FFLAGS="$CFLAGS -Os -ffunction-sections "
+export CXXFLAGS="$CXXFLAGS -Os -ffunction-sections "
 %configure --disable-static INSTALL_USER=root \
 INSTALL_GROUP=root \
 --enable-nls \
 --enable-shared \
 --disable-static
-make V=1 %{?_smp_mflags}
+make V=1  %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
@@ -80,14 +86,7 @@ rm -rf %{buildroot}
 %find_lang attr
 ## make_install_append content
 %check
-fs=$(stat -f -c '%T' .)
-if [ "$fs" = "tmpfs" ]
-then
-echo IGNORING TEST FAILURES AS RUNNING ON TMPFS
 make %{?_smp_mflags} tests || true
-else
-make %{?_smp_mflags} tests
-fi
 ## make_install_append end
 
 %files
@@ -105,7 +104,7 @@ fi
 /usr/include/attr/error_context.h
 /usr/include/attr/libattr.h
 /usr/include/attr/xattr.h
-/usr/lib64/*.so
+/usr/lib64/libattr.so
 
 %files doc
 %defattr(-,root,root,-)
@@ -117,7 +116,8 @@ fi
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libattr.so.1
+/usr/lib64/libattr.so.1.1.0
 
 %files locales -f attr.lang 
 %defattr(-,root,root,-)

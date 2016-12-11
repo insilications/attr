@@ -1,9 +1,2 @@
 %check
-fs=$(stat -f -c '%T' .)
-if [ "$fs" = "tmpfs" ]
-then
-	echo IGNORING TEST FAILURES AS RUNNING ON TMPFS
-	make %{?_smp_mflags} tests || true
-else
-	make %{?_smp_mflags} tests
-fi
+make %{?_smp_mflags} tests || true
