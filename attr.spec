@@ -6,7 +6,7 @@
 #
 Name     : attr
 Version  : 2.4.47
-Release  : 32
+Release  : 33
 URL      : http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
 Source0  : http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
 Source99 : http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz.sig
