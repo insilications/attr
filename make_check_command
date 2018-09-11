@@ -1,2 +1,1 @@
-%check
 make %{?_smp_mflags} tests || true
