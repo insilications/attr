@@ -6,7 +6,7 @@
 #
 Name     : attr
 Version  : 2.4.48
-Release  : 35
+Release  : 36
 URL      : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 Source0  : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 Source99 : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz.sig
@@ -23,6 +23,8 @@ BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
+Patch1: 0001-attr-2.4.48-test-suite-perl.patch
+Patch2: 0002-attr-2.4.48-switch-back-to-syscall.patch
 
 %description
 _________________________________
@@ -31,8 +33,8 @@ Package home: http://savannah.nongnu.org/projects/attr
 %package bin
 Summary: bin components for the attr package.
 Group: Binaries
-Requires: attr-license
-Requires: attr-man
+Requires: attr-license = %{version}-%{release}
+Requires: attr-man = %{version}-%{release}
 
 %description bin
 bin components for the attr package.
@@ -41,9 +43,9 @@ bin components for the attr package.
 %package dev
 Summary: dev components for the attr package.
 Group: Development
-Requires: attr-lib
-Requires: attr-bin
-Provides: attr-devel
+Requires: attr-lib = %{version}-%{release}
+Requires: attr-bin = %{version}-%{release}
+Provides: attr-devel = %{version}-%{release}
 
 %description dev
 dev components for the attr package.
@@ -52,9 +54,9 @@ dev components for the attr package.
 %package dev32
 Summary: dev32 components for the attr package.
 Group: Default
-Requires: attr-lib32
-Requires: attr-bin
-Requires: attr-dev
+Requires: attr-lib32 = %{version}-%{release}
+Requires: attr-bin = %{version}-%{release}
+Requires: attr-dev = %{version}-%{release}
 
 %description dev32
 dev32 components for the attr package.
@@ -63,7 +65,7 @@ dev32 components for the attr package.
 %package doc
 Summary: doc components for the attr package.
 Group: Documentation
-Requires: attr-man
+Requires: attr-man = %{version}-%{release}
 
 %description doc
 doc components for the attr package.
@@ -72,7 +74,7 @@ doc components for the attr package.
 %package lib
 Summary: lib components for the attr package.
 Group: Libraries
-Requires: attr-license
+Requires: attr-license = %{version}-%{release}
 
 %description lib
 lib components for the attr package.
@@ -81,7 +83,7 @@ lib components for the attr package.
 %package lib32
 Summary: lib32 components for the attr package.
 Group: Default
-Requires: attr-license
+Requires: attr-license = %{version}-%{release}
 
 %description lib32
 lib32 components for the attr package.
@@ -113,6 +115,8 @@ man components for the attr package.
 
 %prep
 %setup -q -n attr-2.4.48
+%patch1 -p1
+%patch2 -p1
 pushd ..
 cp -a attr-2.4.48 build32
 popd
@@ -122,14 +126,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1536635559
-export AR=gcc-ar
-export RANLIB=gcc-ranlib
-export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-export FCFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-export FFLAGS="$CFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
-export CXXFLAGS="$CXXFLAGS -O3 -Os -fdata-sections -ffat-lto-objects -ffunction-sections -flto=4 -fno-semantic-interposition "
+export SOURCE_DATE_EPOCH=1536781652
+export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
+export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
+export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
+export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 %configure --disable-static INSTALL_USER=root \
 INSTALL_GROUP=root \
 --enable-nls \
@@ -157,7 +158,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} tests || true
 
 %install
-export SOURCE_DATE_EPOCH=1536635559
+export SOURCE_DATE_EPOCH=1536781652
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/attr
 cp doc/COPYING %{buildroot}/usr/share/doc/attr/doc_COPYING

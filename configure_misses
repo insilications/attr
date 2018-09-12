@@ -1,1 +1,5 @@
 Configure miss: i686-generic-linux-gnu-gcc
+Configure miss: i686-generic-linux-gnu-ar
+Configure miss: i686-generic-linux-gnu-lib
+Configure miss: i686-generic-linux-gnu-link
+Configure miss: i686-generic-linux-gnu-ranlib
