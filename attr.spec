@@ -6,7 +6,7 @@
 #
 Name     : attr
 Version  : 2.4.48
-Release  : 38
+Release  : 39
 URL      : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 Source0  : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 Source99 : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz.sig
