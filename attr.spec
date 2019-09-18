@@ -6,18 +6,18 @@
 #
 Name     : attr
 Version  : 2.4.48
-Release  : 39
-URL      : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
-Source0  : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
-Source99 : http://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz.sig
+Release  : 40
+URL      : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
+Source0  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
+Source1 : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz.sig
 Summary  : A library for filesystem extended attribute support
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+ LGPL-2.1
-Requires: attr-bin
-Requires: attr-lib
-Requires: attr-license
-Requires: attr-locales
-Requires: attr-man
+Requires: attr-bin = %{version}-%{release}
+Requires: attr-lib = %{version}-%{release}
+Requires: attr-license = %{version}-%{release}
+Requires: attr-locales = %{version}-%{release}
+Requires: attr-man = %{version}-%{release}
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
@@ -34,7 +34,6 @@ Package home: http://savannah.nongnu.org/projects/attr
 Summary: bin components for the attr package.
 Group: Binaries
 Requires: attr-license = %{version}-%{release}
-Requires: attr-man = %{version}-%{release}
 
 %description bin
 bin components for the attr package.
@@ -46,6 +45,7 @@ Group: Development
 Requires: attr-lib = %{version}-%{release}
 Requires: attr-bin = %{version}-%{release}
 Provides: attr-devel = %{version}-%{release}
+Requires: attr = %{version}-%{release}
 
 %description dev
 dev components for the attr package.
@@ -125,12 +125,13 @@ popd
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1536948634
-export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
-export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
-export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
-export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1568830021
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 %configure --disable-static INSTALL_USER=root \
 INSTALL_GROUP=root \
 --enable-nls \
@@ -140,9 +141,10 @@ make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export CFLAGS="$CFLAGS -m32"
-export CXXFLAGS="$CXXFLAGS -m32"
-export LDFLAGS="$LDFLAGS -m32"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %configure --disable-static INSTALL_USER=root \
 INSTALL_GROUP=root \
 --enable-nls \
@@ -151,20 +153,20 @@ INSTALL_GROUP=root \
 make  %{?_smp_mflags}
 popd
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 cd ../build32;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make VERBOSE=1 V=1 %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1536948634
+export SOURCE_DATE_EPOCH=1568830021
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/attr
-cp doc/COPYING %{buildroot}/usr/share/doc/attr/doc_COPYING
-cp doc/COPYING.LGPL %{buildroot}/usr/share/doc/attr/doc_COPYING.LGPL
+mkdir -p %{buildroot}/usr/share/package-licenses/attr
+cp doc/COPYING %{buildroot}/usr/share/package-licenses/attr/doc_COPYING
+cp doc/COPYING.LGPL %{buildroot}/usr/share/package-licenses/attr/doc_COPYING.LGPL
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -176,6 +178,8 @@ fi
 popd
 %make_install
 %find_lang attr
+## Remove excluded files
+rm -f %{buildroot}/usr/share/man/man5/attr.5
 
 %files
 %defattr(-,root,root,-)
@@ -225,14 +229,12 @@ popd
 /usr/lib32/libattr.so.1.1.2448
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/attr/COPYING
-/usr/share/doc/attr/COPYING.LGPL
-/usr/share/doc/attr/doc_COPYING
-/usr/share/doc/attr/doc_COPYING.LGPL
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/attr/doc_COPYING
+/usr/share/package-licenses/attr/doc_COPYING.LGPL
 
 %files man
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 /usr/share/man/man1/attr.1
 /usr/share/man/man1/getfattr.1
 /usr/share/man/man1/setfattr.1
