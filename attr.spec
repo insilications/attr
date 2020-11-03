@@ -6,10 +6,10 @@
 #
 Name     : attr
 Version  : 2.4.48
-Release  : 40
+Release  : 41
 URL      : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
 Source0  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz
-Source1 : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz.sig
+Source1  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.4.48.tar.gz.sig
 Summary  : A library for filesystem extended attribute support
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+ LGPL-2.1
@@ -115,6 +115,7 @@ man components for the attr package.
 
 %prep
 %setup -q -n attr-2.4.48
+cd %{_builddir}/attr-2.4.48
 %patch1 -p1
 %patch2 -p1
 pushd ..
@@ -126,11 +127,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1568830021
+export SOURCE_DATE_EPOCH=1604364710
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
-export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
-export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export FCFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export FFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 %configure --disable-static INSTALL_USER=root \
 INSTALL_GROUP=root \
@@ -157,16 +158,16 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
 cd ../build32;
-make VERBOSE=1 V=1 %{?_smp_mflags} check || : || :
+make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1568830021
+export SOURCE_DATE_EPOCH=1604364710
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/attr
-cp doc/COPYING %{buildroot}/usr/share/package-licenses/attr/doc_COPYING
-cp doc/COPYING.LGPL %{buildroot}/usr/share/package-licenses/attr/doc_COPYING.LGPL
+cp %{_builddir}/attr-2.4.48/doc/COPYING %{buildroot}/usr/share/package-licenses/attr/cade8ab653f461106e2e3ed6fa442c761ee18d9e
+cp %{_builddir}/attr-2.4.48/doc/COPYING.LGPL %{buildroot}/usr/share/package-licenses/attr/1a8a11da70cc41755e50a4aa88f605c4ec1b2f6d
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -230,8 +231,8 @@ rm -f %{buildroot}/usr/share/man/man5/attr.5
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/attr/doc_COPYING
-/usr/share/package-licenses/attr/doc_COPYING.LGPL
+/usr/share/package-licenses/attr/1a8a11da70cc41755e50a4aa88f605c4ec1b2f6d
+/usr/share/package-licenses/attr/cade8ab653f461106e2e3ed6fa442c761ee18d9e
 
 %files man
 %defattr(0644,root,root,0755)
