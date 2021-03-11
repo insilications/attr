@@ -1,2 +1,1 @@
-0001-attr-2.4.48-test-suite-perl.patch
-0002-attr-2.4.48-switch-back-to-syscall.patch
+0001-Fix-expected-result-for-a-setfattr-test.patch
