@@ -6,7 +6,7 @@
 #
 Name     : attr
 Version  : 2.5.0
-Release  : 43
+Release  : 44
 URL      : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.0.tar.gz
 Source0  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.0.tar.gz
 Source1  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.0.tar.gz.sig
@@ -125,7 +125,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1615505717
+export SOURCE_DATE_EPOCH=1615506097
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 export FCFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
@@ -156,12 +156,12 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make %{?_smp_mflags} check || :
+make VERBOSE=1 check || :
 cd ../build32;
-make %{?_smp_mflags} check || : || :
+make VERBOSE=1 check || :
 
 %install
-export SOURCE_DATE_EPOCH=1615505717
+export SOURCE_DATE_EPOCH=1615506097
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/attr
 cp %{_builddir}/attr-2.5.0/doc/COPYING %{buildroot}/usr/share/package-licenses/attr/cade8ab653f461106e2e3ed6fa442c761ee18d9e
