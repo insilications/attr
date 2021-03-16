@@ -5,11 +5,11 @@
 # Source0 file verified with key 0xD5BF9FEB0313653A (agruen@gnu.org)
 #
 Name     : attr
-Version  : 2.5.0
-Release  : 44
-URL      : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.0.tar.gz
-Source0  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.0.tar.gz
-Source1  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.0.tar.gz.sig
+Version  : 2.5.1
+Release  : 45
+URL      : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.1.tar.gz
+Source0  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.1.tar.gz
+Source1  : https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.1.tar.gz.sig
 Summary  : A library for filesystem extended attribute support
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+ LGPL-2.1
@@ -113,11 +113,11 @@ man components for the attr package.
 
 
 %prep
-%setup -q -n attr-2.5.0
-cd %{_builddir}/attr-2.5.0
+%setup -q -n attr-2.5.1
+cd %{_builddir}/attr-2.5.1
 %patch1 -p1
 pushd ..
-cp -a attr-2.5.0 build32
+cp -a attr-2.5.1 build32
 popd
 
 %build
@@ -125,7 +125,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1615506097
+export SOURCE_DATE_EPOCH=1615912668
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 export FCFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
@@ -161,11 +161,11 @@ cd ../build32;
 make VERBOSE=1 check || :
 
 %install
-export SOURCE_DATE_EPOCH=1615506097
+export SOURCE_DATE_EPOCH=1615912668
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/attr
-cp %{_builddir}/attr-2.5.0/doc/COPYING %{buildroot}/usr/share/package-licenses/attr/cade8ab653f461106e2e3ed6fa442c761ee18d9e
-cp %{_builddir}/attr-2.5.0/doc/COPYING.LGPL %{buildroot}/usr/share/package-licenses/attr/1a8a11da70cc41755e50a4aa88f605c4ec1b2f6d
+cp %{_builddir}/attr-2.5.1/doc/COPYING %{buildroot}/usr/share/package-licenses/attr/cade8ab653f461106e2e3ed6fa442c761ee18d9e
+cp %{_builddir}/attr-2.5.1/doc/COPYING.LGPL %{buildroot}/usr/share/package-licenses/attr/1a8a11da70cc41755e50a4aa88f605c4ec1b2f6d
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -220,12 +220,12 @@ rm -f %{buildroot}/usr/share/man/man5/attr.5
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libattr.so.1
-/usr/lib64/libattr.so.1.1.250
+/usr/lib64/libattr.so.1.1.2501
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libattr.so.1
-/usr/lib32/libattr.so.1.1.250
+/usr/lib32/libattr.so.1.1.2501
 
 %files license
 %defattr(0644,root,root,0755)
