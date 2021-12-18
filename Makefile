@@ -1,5 +1,6 @@
 PKG_NAME := attr
-URL = https://download-mirror.savannah.gnu.org/releases/attr/attr-2.5.1.tar.gz
+URL = https://git.savannah.nongnu.org/git/attr.git
 ARCHIVES = 
+ARCHIVES_GIT = 
 
 include ../common/Makefile.common
